@@ -10,7 +10,12 @@
 </head>
 <body>
   <h3>Welcome to my chat app</h3>
-
+  <ol id="messages"></ol>
+  <form id="form-container">
+    <input name="message" type="text" placeholder="Type your Message"/>
+    <button type="submit">Submit</button> 
+  </form>
+  <script src='./libs/jquery-min.js'></script>
   <script src='/socket.io/socket.io.js'></script>
   <script src='./index.js'></script>
 </body>
