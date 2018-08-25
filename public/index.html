@@ -6,7 +6,7 @@
   <title>Page Title</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" type="text/css" media="screen" href="./css/styles.css" />
-  <script src="main.js"></script>
+  <!-- <script src="main.js"></script> -->
 </head>
 <body class="chat">
   <div class="chat__sidebar">
@@ -25,9 +25,33 @@
       </div>
   </div>
   
+  <script id="message-template" type="text/template">
+    <li class="message">
+      <div class="message__title">
+        <h4>{{from}}</h4>
+        <span>{{createdAt}}</span>
+      </div>
+      <div class="message__body">
+          {{text}}
+      </div>
+    </li>
+  </script>
+
+  <script id="geolocation-template" type="text/template">
+    <li class="message">
+      <div class="message__title">
+        <h4>{{from}}</h4>
+        <span>{{createdAt}}</span>
+      </div>
+      <div class="message__body">
+        <a href={{url}} target="__blank">Send Location</a>
+      </div>
+    </li>
+  </script>
   
-  <script src='./libs/jquery-min.js'></script>
-  <script src='./libs/moment.js'></script>
+  <script src='./js/libs/jquery-min.js'></script>
+  <script src='./js/libs/moment.js'></script>
+  <script src='./js/libs/mustache.js'></script>
   <script src='/socket.io/socket.io.js'></script>
   <script src='./index.js'></script>
 </body>
