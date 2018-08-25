@@ -3,7 +3,7 @@ const path = require('path')
 const http = require('http')
 const socketIO = require('socket.io')
 
-const {generateMessage} = require('./utils/utils')
+const {generateMessage, generateLocationMessage} = require('./utils/utils')
 
 const publicDir = path.join(__dirname, '../public')
 
@@ -31,6 +31,10 @@ io.on('connection', (socket) => {
     
     io.emit('newMessage', generateMessage(message.text, message.from))
     callback()
+  })
+
+  socket.on('geolocationMessage', (coords) => {
+    io.emit('newGeoLocationMessage', generateLocationMessage(coords.latitude, coords.longitude, 'Admin'))
   })
 })
 
