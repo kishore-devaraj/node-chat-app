@@ -10,18 +10,20 @@ socket.on('disconnect', function () {
 })
 
 socket.on('newMessage', function (message) {
+  let timeFormatted = moment(message.createdAt).format('H:mm A')
   console.log('New message received ', message)
   let li = jQuery('<li></li>')
-  li.text(`${message.from}: ${message.text}`)
+  li.text(`${message.from} ${timeFormatted}: ${message.text}`)
   jQuery('#messages').append(li)
 }) 
 
 socket.on('newGeoLocationMessage', function(locationMessage) {
   console.log('Location message received', locationMessage)
+  let timeFormatted = moment(locationMessage.createdAt).format('H:mm A')
   let li = jQuery('<li></li>')
   let a = jQuery('<a target="_blank">Location Details</a>')
   a.attr('href', locationMessage.url)
-  li.text(`${locationMessage.from}: `)
+  li.text(`${locationMessage.from} ${timeFormatted}: `)
   li.append(a)
   jQuery('#messages').append(li)
 })
