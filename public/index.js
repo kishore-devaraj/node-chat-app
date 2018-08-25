@@ -19,6 +19,7 @@ socket.on('newMessage', function (message) {
     'createdAt': timeFormatted
   })
   jQuery('#messages').append(html)
+  scrollToBottom()
 }) 
 
 socket.on('newGeoLocationMessage', function(locationMessage) {
@@ -30,6 +31,7 @@ socket.on('newGeoLocationMessage', function(locationMessage) {
     'url': locationMessage.url
   })
   jQuery('#messages').append(html)
+  scrollToBottom()
 })
 
 jQuery('#form-container').submit(function(e) {
@@ -65,3 +67,22 @@ sendLocation.click(function(e) {
   })
 
 })
+
+
+// Utils 
+
+function scrollToBottom (){
+  const messages = jQuery('#messages')
+  const newMessage = messages.children('li:last-child')
+
+  const scrollHeight = messages.prop('scrollHeight')
+  const clientHeight = messages.prop('clientHeight')
+  const scrollTop = messages.prop('scrollTop')
+
+  const newMessageHeight = newMessage.innerHeight()
+  const prevMessageHeight = newMessage.prev().innerHeight()
+
+  if (scrollTop +  clientHeight + newMessageHeight + prevMessageHeight >= scrollHeight){
+    messages.scrollTop(scrollHeight)
+  }
+}

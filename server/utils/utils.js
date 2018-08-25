@@ -17,6 +17,7 @@ function generateLocationMessage(latitude, longitude, from) {
         createdAt: moment.valueOf()
     }
 }
+
 module.exports = {
     generateMessage,
     generateLocationMessage
