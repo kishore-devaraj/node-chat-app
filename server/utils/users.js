@@ -8,6 +8,11 @@ class Users {
         return user
     }
 
+    findUserByName (name) {
+        let user = this.users.filter(user => user.name === name)[0]
+        return user
+    }
+
     removeUser (id) {
         let userToBeRemoved = this.findUser(id)
         if (userToBeRemoved) {
@@ -25,7 +30,7 @@ class Users {
     addUser (id, name, room) {
         const user = {id, name, room}
         this.users.push(user)
-        return user
+        return user 
     }
 }
 

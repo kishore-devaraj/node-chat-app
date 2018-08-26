@@ -65,4 +65,19 @@ describe ('Users Class Tests', () => {
         expect(user).toNotExist()
         expect(users.users.length).toBe(3)
     })
+
+    it('should return user by valid name', () => {
+        const name = 'Kishore'
+        let user = users.findUserByName(name)
+        expect(user).toInclude({
+            name: 'Kishore',
+            room: 'ReactJS'
+        })
+    })
+
+    it('should not return user by invalid name', () => {
+        const name = 'Pumbha'
+        let user = users.findUserByName(name)
+        expect(user).toNotExist()
+    })
 })

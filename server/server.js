@@ -31,7 +31,8 @@ io.on('connection', (socket) => {
 
   socket.on('createMessage', (message, callback) => {
     let user = users.findUser(socket.id)
-
+    console.log(users)
+    console.log(user)
     if (user && isRealString(message.text)) {
       io.to(user.room).emit('newMessage', generateMessage(message.text, user.name))
       callback()
@@ -51,9 +52,16 @@ io.on('connection', (socket) => {
     } 
 
     socket.join(params.room.toLowerCase())
-    users.removeUser(socket.id)
-    users.addUser(socket.id, params.name,params.room.toLowerCase())
+    if(!users.findUserByName(params.name)) {
+      users.removeUser(socket.id)
+      users.addUser(socket.id, params.name,params.room.toLowerCase())
+    
+      socket.broadcast.to(params.room.toLowerCase()).emit('newMessage', generateMessage(`${params.name} Joined`,'Admin'))
+    }
+    socket.emit('newMessage', generateMessage('Welcome to the site','Admin'))
+    io.to(params.room.toLowerCase()).emit('updatedUserList', users.getUsersList(params.room.toLowerCase()))
 
+    
     /**
      * io.emit - To all Users
      * socket.broadcast.emit - To all except self
@@ -64,9 +72,7 @@ io.on('connection', (socket) => {
      * socket.broadcast.to(room).emit
      */
     
-    socket.emit('newMessage', generateMessage('Welcome to the site','Admin'))
-    socket.broadcast.to(params.room.toLowerCase()).emit('newMessage', generateMessage(`${params.name} Joined`,'Admin'))
-    io.to(params.room.toLowerCase()).emit('updatedUserList', users.getUsersList(params.room.toLowerCase()))
+    
   })
 })
 
