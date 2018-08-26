@@ -3,7 +3,7 @@ const path = require('path')
 const http = require('http')
 const socketIO = require('socket.io')
 
-const {generateMessage, generateLocationMessage} = require('./utils/utils')
+const {generateMessage, generateLocationMessage, isRealString} = require('./utils/utils')
 
 const publicDir = path.join(__dirname, '../public')
 
@@ -18,10 +18,6 @@ const io = socketIO(server)
 io.on('connection', (socket) => {
   console.log('Client connected')
   
-  socket.emit('newMessage', generateMessage('Welcome to the site','Admin'))
-
-  socket.broadcast.emit('newMessage', generateMessage('New User Join','Admin'))
-
   socket.on('disconnect', () => {
     console.log('Client disconnected')
   })
@@ -35,6 +31,27 @@ io.on('connection', (socket) => {
 
   socket.on('geolocationMessage', (coords) => {
     io.emit('newGeoLocationMessage', generateLocationMessage(coords.latitude, coords.longitude, 'Admin'))
+  })
+
+  socket.on('join', (params, callback) => {
+    if(!isRealString(params.name) && !isRealString(params.room)){
+      callback('Enter the name and room')
+    } 
+
+    socket.join(params.room)
+    /**
+     * io.emit - To all Users
+     * socket.broadcast.emit - To all except self
+     * socket.emit - One to One
+     * 
+     * For rooms we use the first two
+     * io.to(room).emit
+     * socket.broadcast.to(room).emit
+     */
+    
+    socket.emit('newMessage', generateMessage('Welcome to the site','Admin'))
+    socket.broadcast.to(params.room).emit('newMessage', generateMessage('New User Join','Admin'))
+
   })
 })
 

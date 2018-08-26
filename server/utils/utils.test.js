@@ -1,5 +1,5 @@
 const expect = require('expect')
-const {generateMessage, generateLocationMessage} = require('./utils')
+const {generateMessage, generateLocationMessage, isRealString} = require('./utils')
 
 describe('Utils tests', () => {
     it('should return generated message', () => {
@@ -25,5 +25,19 @@ describe('Location Generation Tests', () => {
             'from': 'Admin',
             'url': `https://www.google.com/maps?q=${latitude},${longitude}`
         })
+    })
+})
+
+describe('isRealString', () => {
+    it('should return false on non-strings', () => {
+        expect(isRealString(345345)).toBe(false)
+    })
+
+    it('should return false when it has no real char', () => {
+        expect(isRealString('     ')).toBe(false)
+    })  
+
+    it('should return true on stirng', () => {
+        expect(isRealString('Kishore')).toBe(true)
     })
 })

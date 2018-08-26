@@ -14,11 +14,19 @@ function generateLocationMessage(latitude, longitude, from) {
     return {
         from,
         url: `https://www.google.com/maps?q=${latitude},${longitude}`,
-        createdAt: moment.valueOf()
+        createdAt: moment().valueOf()
     }
+}
+
+function isRealString (str) {
+    if(typeof str === 'string' && str.trim().length > 0) {
+        return true
+    }
+    return false
 }
 
 module.exports = {
     generateMessage,
-    generateLocationMessage
+    generateLocationMessage,
+    isRealString
 }
