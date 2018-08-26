@@ -4,11 +4,13 @@ const http = require('http')
 const socketIO = require('socket.io')
 
 const {generateMessage, generateLocationMessage, isRealString} = require('./utils/utils')
+const {Users} = require('./utils/users')
 
 const publicDir = path.join(__dirname, '../public')
 
 // Global variables
 const port = process.env.PORT || 3000
+let users = new Users()
 
 const app = express()
 app.use(express.static(publicDir))
@@ -20,6 +22,11 @@ io.on('connection', (socket) => {
   
   socket.on('disconnect', () => {
     console.log('Client disconnected')
+    let user = users.removeUser(socket.id)
+    if (user) {
+      io.to(user.room).emit('updatedUserList', users.getUsersList(user.room))
+      io.to(user.room).emit('newMessage', generateMessage(`${user.name} has left`, 'Admin'))
+    }
   })
 
   socket.on('createMessage', (message, callback) => {
@@ -35,10 +42,13 @@ io.on('connection', (socket) => {
 
   socket.on('join', (params, callback) => {
     if(!isRealString(params.name) && !isRealString(params.room)){
-      callback('Enter the name and room')
+      return callback('Enter the name and room')
     } 
 
     socket.join(params.room)
+    users.removeUser(socket.id)
+    users.addUser(socket.id, params.name,params.room)
+
     /**
      * io.emit - To all Users
      * socket.broadcast.emit - To all except self
@@ -50,8 +60,8 @@ io.on('connection', (socket) => {
      */
     
     socket.emit('newMessage', generateMessage('Welcome to the site','Admin'))
-    socket.broadcast.to(params.room).emit('newMessage', generateMessage('New User Join','Admin'))
-
+    socket.broadcast.to(params.room).emit('newMessage', generateMessage(`${params.name} Joined`,'Admin'))
+    io.to(params.room).emit('updatedUserList', users.getUsersList(params.room))
   })
 })
 
