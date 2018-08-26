@@ -30,14 +30,19 @@ io.on('connection', (socket) => {
   })
 
   socket.on('createMessage', (message, callback) => {
-    console.log('New Message created ',message)
-    
-    io.emit('newMessage', generateMessage(message.text, message.from))
-    callback()
+    let user = users.findUser(socket.id)
+
+    if (user && isRealString(message.text)) {
+      io.to(user.room).emit('newMessage', generateMessage(message.text, user.name))
+      callback()
+    } 
   })
 
   socket.on('geolocationMessage', (coords) => {
-    io.emit('newGeoLocationMessage', generateLocationMessage(coords.latitude, coords.longitude, 'Admin'))
+    let user = users.findUser(socket.id)
+    if (user) {
+      io.to(user.room).emit('newGeoLocationMessage', generateLocationMessage(coords.latitude, coords.longitude, user.name))
+    }
   })
 
   socket.on('join', (params, callback) => {

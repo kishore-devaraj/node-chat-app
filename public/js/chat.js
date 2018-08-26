@@ -57,7 +57,6 @@ jQuery('#form-container').submit(function(e) {
   e.preventDefault()
   const messageField = jQuery('[name=message]')
   socket.emit('createMessage', {
-    from: 'User',
     text: messageField.val()
   }, function () {
     messageField.val('')
