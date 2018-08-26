@@ -50,9 +50,9 @@ io.on('connection', (socket) => {
       return callback('Enter the name and room')
     } 
 
-    socket.join(params.room)
+    socket.join(params.room.toLowerCase())
     users.removeUser(socket.id)
-    users.addUser(socket.id, params.name,params.room)
+    users.addUser(socket.id, params.name,params.room.toLowerCase())
 
     /**
      * io.emit - To all Users
@@ -65,8 +65,8 @@ io.on('connection', (socket) => {
      */
     
     socket.emit('newMessage', generateMessage('Welcome to the site','Admin'))
-    socket.broadcast.to(params.room).emit('newMessage', generateMessage(`${params.name} Joined`,'Admin'))
-    io.to(params.room).emit('updatedUserList', users.getUsersList(params.room))
+    socket.broadcast.to(params.room.toLowerCase()).emit('newMessage', generateMessage(`${params.name} Joined`,'Admin'))
+    io.to(params.room.toLowerCase()).emit('updatedUserList', users.getUsersList(params.room.toLowerCase()))
   })
 })
 
